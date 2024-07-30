@@ -15,11 +15,3 @@ export const Input: FC<MyProps> = ({ name, type }) => {
   );
 };
 
-export const RadioInput = ({ label }: any) => {
-  return (
-    <>
-      <input type="radio" id="radio-button" />
-      <label htmlFor="radio-button">{label}</label>
-    </>
-  );
-};
