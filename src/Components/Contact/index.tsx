@@ -1,15 +1,27 @@
-import { ChangeEvent, useState, FC } from "react";
+import { ChangeEvent, useState, FC, FormEvent } from "react";
 import { Input } from "../Input";
 import { RadioInput } from "../RadioInput";
 import { Output } from "../Output";
+import { Button } from "../Button";
+
+interface MyProps {
+  fullName: string;
+  userName: string;
+  phoneNumber: number | "";
+  favCar: string;
+  carAge: number | "";
+  agree: boolean;
+}
 
 export const Contact: FC = () => {
   const [stateFullName, setFullName] = useState<string>("");
   const [stateUserName, setUserName] = useState<string>("");
-  const [statePhoneNumber, setPhoneNumber] = useState<number>(0);
+  const [statePhoneNumber, setPhoneNumber] = useState<number | "">("");
   const [stateFavCar, setFavCar] = useState<string>("");
-  const [stateCarAge, setCarAge] = useState<number>(0);
+  const [stateCarAge, setCarAge] = useState<number | "">("");
   const [stateAgree, setAgree] = useState<boolean>(false);
+
+  const [stateSubmit, setSubmit] = useState<MyProps |  null >(null)
 
   const updateFullName = (e: ChangeEvent<HTMLInputElement>) => {
     setFullName(e.target.value);
@@ -32,17 +44,30 @@ export const Contact: FC = () => {
     setAgree(e.target.checked);
   };
 
-  console.log({
-    stateFullName,
-    stateUserName,
-    statePhoneNumber,
-    stateFavCar,
-    stateCarAge,
-    stateAgree,
-  });
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    setSubmit({
+      fullName: stateFullName,
+      userName: stateUserName,
+      phoneNumber: statePhoneNumber,
+      favCar:stateFavCar,
+      carAge: stateCarAge,
+      agree: stateAgree,
+    });
 
+    setFullName("");
+    setUserName("");
+    setPhoneNumber(0);
+    setFavCar("");
+    setCarAge(0);
+    setAgree(false);
+  }
+
+ 
   return (
     <>
+    <form onSubmit={handleSubmit}>
       <Input
         name="FullName"
         change={updateFullName}
@@ -84,12 +109,24 @@ export const Contact: FC = () => {
         type="checkbox"
         checked={stateAgree}
       />
-      <Output name="Full name" value={stateFullName} />
-      <Output name="User name" value={stateFullName} />
-      <Output name="Phone number" value={stateFullName} />
-      <Output name="Favorite Car:" value={stateFullName} />
-      <Output name="Car Age:" value={stateFullName} />
-      <Output name="User name" value={stateAgree ? "Yes" : "No"} />
+      <Button type="submit" name="Submit" />
+      </form>
+      {stateSubmit && (
+        <div>
+          <Output name="Full name" value={stateSubmit.fullName} />
+          <Output name="User name" value={stateSubmit.userName} />
+          <Output name="Phone number" value={stateSubmit.phoneNumber} />
+          <Output name="Favorite Car:" value={stateSubmit.favCar} />
+          <Output name="Car Age:" value={stateSubmit.carAge} />
+          <Output name="User name" value={stateSubmit.agree ? "Yes" : "No"} />
+        </div>
+
+      )
+
+
+      }
+     
+      
     </>
   );
 };
